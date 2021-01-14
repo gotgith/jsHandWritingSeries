@@ -1,14 +1,15 @@
 import EventHub from '../src/index';
 
+type testCase = (message: string) => void
 
-const test1 = (message) => {
+const test1: testCase = message => {
   const eventHub = new EventHub();
   console.assert(eventHub instanceof Object === true, 'eventHub是一个对象');
   console.log(message);
 };
 
 
-const test2 = (message) => {
+const test2: testCase = message => {
   const eventHub = new EventHub();
   let called = false;
   eventHub.on('xxx', (p) => {
@@ -17,14 +18,12 @@ const test2 = (message) => {
 
   });
   eventHub.emit('xxx', '我是参数，哈哈');
-  setTimeout(() => {
-    console.assert(called === true);
-    console.log(message);
-  }, 1000);
+  console.assert(called);
+  console.log(message);
 };
 
 
-const test3 = (message) => {
+const test3: testCase = message => {
   let called = false;
   const fn1 = () => {
     called = true;
@@ -33,10 +32,8 @@ const test3 = (message) => {
   eventHub.on('yyy', fn1);
   eventHub.off('yyy', fn1);
   eventHub.emit('yyy');
-  setTimeout(() => {
-    console.assert(called === false);
-    console.log(message);
-  }, 1000);
+  console.assert(called === false);
+  console.log(message);
 };
 
 test1('EventHub 可以创建对象');

@@ -1,19 +1,20 @@
 class EventHub {
-  private cache = {};
+  private cache: { [key: string]: Array<(data: unknown) => void> } = {};
 
-  on(eventName, fn) {
+  on(eventName: string, fn: (data: unknown) => void) {
     // 把 fn 推进 this.cache[eventName] 数组
     this.cache[eventName] = this.cache[eventName] || [];
     this.cache[eventName].push(fn);
   }
 
-  emit(eventName, data?) {
+  emit(eventName: string, data?: unknown) {
     // 把 this.cache[eventName] 数组里面的 fn 全部依次调用
     (this.cache[eventName] || []).forEach(fn => fn(data));
 
   }
 
-  off(eventName, fn) {
+// any 可以随时改类型，unknown 是确定一种类型后不可改
+  off(eventName: string, fn: (data: unknown) => void) {
     // 把 fn 从 this.cache[eventName] 数组里删除
     let index = indexOf(this.cache[eventName], fn);
     if (index === -1) return;
